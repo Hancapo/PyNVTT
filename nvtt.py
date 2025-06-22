@@ -29,9 +29,10 @@ class NVTT:
         
         self.NvttOutputOptionsPtr = ctypes.POINTER(NvttOutputOptions)
         
-        self.map_functions()
+        self.map_comp_options_funcs()
+        self.map_surface_funcs()
         
-    def map_functions(self):
+    def map_surface_funcs(self):
         # Map NVTT functions
         self._lib.nvttVersion.restype = ctypes.c_uint
         self._lib.nvttVersion.argtypes = []
@@ -61,6 +62,8 @@ class NVTT:
         self._lib.nvttSurfaceDepth.argtypes = [self.NvttSurfacePtr]
         
         #Map Compression Options functions
+    
+    def map_comp_options_funcs(self):
         self._lib.nvttCreateCompressionOptions.restype = self.NvttCompressionOptionsPtr
         self._lib.nvttCreateCompressionOptions.argtypes = ()
         
@@ -93,7 +96,6 @@ class NVTT:
         
         self._lib.nvttGetCompressionOptionsD3D9Format.restype = ctypes.c_uint
         self._lib.nvttGetCompressionOptionsD3D9Format.argtypes = [self.NvttCompressionOptionsPtr]
-     
      
     @property
     def version(self) -> int:
