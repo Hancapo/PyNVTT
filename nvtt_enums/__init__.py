@@ -2,3 +2,11 @@ from .Format import Format
 from .Quality import Quality
 from .PixelType import PixelType
 from .Container import Container
+from .Severity import Severity
+from .AlphaMode import AlphaMode
+from .Error import Error
+from .ToneMapper import ToneMapper
+from .NormalTransform import NormalTransform
+from .MipmapFilter import MipmapFilter
+from .RoundMode import RoundMode
+from .EncodeFlags import EncodeFlags
