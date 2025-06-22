@@ -15,12 +15,12 @@ class Format(IntEnum):
     
     #DX10 Formats
     BC1 = DXT1
-    BC1A = DXT1a
+    BC1a = DXT1a
     BC2 = DXT3
     BC3 = DXT5
-    BC3N = DXT5n
+    BC3n = DXT5n
     BC4 = 6
-    BC5 = 7
+    BC4S = 7
     ATI2 = 8
     BC5 = 9
     BC5S = 10
