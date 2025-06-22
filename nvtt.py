@@ -31,13 +31,16 @@ class NVTT:
         
         self.map_comp_options_funcs()
         self.map_surface_funcs()
+        self.map_nvtt_funcs()
         
-    def map_surface_funcs(self):
-        # Map NVTT functions
+    def map_nvtt_funcs(self):
+        """Map NVTT functions."""
         self._lib.nvttVersion.restype = ctypes.c_uint
         self._lib.nvttVersion.argtypes = []
         
-        # Map Surface functions
+    def map_surface_funcs(self):
+        """Map nvttSurface functions."""
+        
         self._lib.nvttCreateSurface.restype = self.NvttSurfacePtr
         self._lib.nvttCreateSurface.argtypes = ()
         
@@ -61,9 +64,8 @@ class NVTT:
         self._lib.nvttSurfaceDepth.restype  = ctypes.c_int
         self._lib.nvttSurfaceDepth.argtypes = [self.NvttSurfacePtr]
         
-        #Map Compression Options functions
-    
     def map_comp_options_funcs(self):
+        """Map nvttCompressionOptions functions."""
         self._lib.nvttCreateCompressionOptions.restype = self.NvttCompressionOptionsPtr
         self._lib.nvttCreateCompressionOptions.argtypes = ()
         
