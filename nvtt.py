@@ -16,7 +16,7 @@ class NVTT:
             pass
         class NvttContext(ctypes.Structure):
             pass
-        class _NvttCompressionOptions(ctypes.Structure):
+        class NvttCompressionOptions(ctypes.Structure):
             pass
         class NvttOutputOptions(ctypes.Structure):
             pass
@@ -25,7 +25,7 @@ class NVTT:
         
         self.NvttContextPtr = ctypes.POINTER(NvttContext)
         
-        self.NvttCompressionOptionsPtr = ctypes.POINTER(_NvttCompressionOptions)
+        self.NvttCompressionOptionsPtr = ctypes.POINTER(NvttCompressionOptions)
         
         self.NvttOutputOptionsPtr = ctypes.POINTER(NvttOutputOptions)
         
@@ -76,7 +76,7 @@ class NVTT:
         self._lib.nvttResetCompressionOptions.argtypes = [self.NvttCompressionOptionsPtr]
         
         self._lib.nvttSetCompressionOptionsFormat.restype = None
-        self._lib.nvttResetCompressionOptions.argtypes = [self.NvttCompressionOptionsPtr, ctypes.c_int]
+        self._lib.nvttSetCompressionOptionsFormat.argtypes = [self.NvttCompressionOptionsPtr, ctypes.c_int]
         
         self._lib.nvttSetCompressionOptionsQuality.restype = None
         self._lib.nvttSetCompressionOptionsQuality.argtypes = [self.NvttCompressionOptionsPtr, ctypes.c_int]
@@ -106,6 +106,22 @@ class NVTT:
         
         self._lib.nvttDestroyOutputOptions.restype = None
         self._lib.nvttDestroyOutputOptions.argtypes = [self.NvttOutputOptionsPtr]
+        
+        self._lib.nvttResetOutputOptions.restype = None
+        self._lib.nvttResetOutputOptions.argtypes = [self.NvttOutputOptionsPtr]
+        
+        self._lib.nvttSetOutputOptionsFileName.restype = None
+        self._lib.nvttSetOutputOptionsFileName.argtypes = [self.NvttOutputOptionsPtr, ctypes.POINTER(ctypes.c_char_p)]
+        
+        self._lib.nvttSetOutputOptionsContainer.restype = None
+        self._lib.nvttSetOutputOptionsContainer.argtypes = [self.NvttOutputOptionsPtr, ctypes.c_int]
+        
+        self._lib.nvttSetOutputOptionsUserVersion.restype = None
+        self._lib.nvttSetOutputOptionsUserVersion.argtypes = [self.NvttOutputOptionsPtr, ctypes.c_int]
+        
+        self._lib.nvttSetOutputOptionsSrgbFlag.restype = None
+        self._lib.nvttSetOutputOptionsSrgbFlag.argtypes = [self.NvttOutputOptionsPtr, ctypes.c_bool]
+        
      
     @property
     def version(self) -> int:
