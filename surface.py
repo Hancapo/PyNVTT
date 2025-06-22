@@ -1,5 +1,6 @@
 import ctypes
 from pathlib import Path
+from nvtt_enums import MipmapFilter
 
 
 class Surface:
@@ -15,7 +16,7 @@ class Surface:
             if getattr(self, '_ptr', None):
                 self._lib.nvttDestroySurface(self._ptr)
                 
-        def load(self, filename: str, expect_signed: bool = False):
+        def load(self, filename: str, expect_signed: bool = False) -> bool:
             if not Path.exists(Path(filename)):
                 raise FileNotFoundError(f"File {filename} does not exist.")
             
@@ -25,7 +26,7 @@ class Surface:
                 filename.encode('utf-8'),
                 ctypes.byref(has_alpha),
                 expect_signed,
-                None  # NvttTimingContext, not used here
+                None
             )
             if not result:
                 raise RuntimeError(f"Failed to load texture from {filename}.")
@@ -51,3 +52,18 @@ class Surface:
         def depth(self) -> int:
             """Get the depth of the surface."""
             return self._lib.nvttSurfaceDepth(self._ptr)
+        
+        def count_mipmaps(self, min_size: int = 1) -> int:
+            """Count the number of mipmaps in the surface."""
+            return self._lib.nvttSurfaceCountMipmaps(self._ptr, min_size)
+        
+        def build_next_mipmap(self, filter: MipmapFilter, min_size: int = 1) -> bool:
+            """Build the next mipmap level."""
+            if not self._ptr:
+                raise RuntimeError("Surface has already been destroyed or not initialized.")
+            return self._lib.nvttSurfaceBuildNextMipmapDefaults(
+                self._ptr,
+                int(filter),
+                min_size,
+                None
+            )
