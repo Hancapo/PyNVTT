@@ -14,3 +14,4 @@ texture_01.png
 __pycache__/nvtt.cpython-311.pyc
 libs/FreeImage.dll
 libs/nvtt30205.dll
+main.py
