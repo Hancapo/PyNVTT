@@ -176,4 +176,7 @@ class NVTT:
         if self._version == 0:
             self._version = self._lib.nvttVersion()
         return self._version
-                
+
+
+#This software uses the FreeImage open source image library. See http://freeimage.sourceforge.net for details.
+#FreeImage is used under the (GNU GPL or FIPL), version (license version).
