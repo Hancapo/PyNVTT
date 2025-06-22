@@ -1,7 +1,6 @@
 import ctypes
 from pathlib import Path
 
-
 LIBRARY_PATH = Path(Path(__file__).parent) / "libs"
 
 NVTT_DLL_NAME: str = "nvtt30205.dll"
@@ -12,24 +11,26 @@ class NVTT:
         self._lib = ctypes.CDLL(dll_path)
         self._version: int = 0
         
-        class NvttSurface(ctypes.Structure):
-            pass
-        class NvttContext(ctypes.Structure):
-            pass
         class NvttCompressionOptions(ctypes.Structure):
             pass
         class NvttOutputOptions(ctypes.Structure):
             pass
-        
-        self.NvttSurfacePtr = ctypes.POINTER(NvttSurface)
-        
-        self.NvttContextPtr = ctypes.POINTER(NvttContext)
+        class NvttContext(ctypes.Structure):
+            pass
+        class NvttSurface(ctypes.Structure):
+            pass
         
         self.NvttCompressionOptionsPtr = ctypes.POINTER(NvttCompressionOptions)
         
         self.NvttOutputOptionsPtr = ctypes.POINTER(NvttOutputOptions)
         
+        self.NvttContextPtr = ctypes.POINTER(NvttContext)
+        
+        self.NvttSurfacePtr = ctypes.POINTER(NvttSurface)
+        
         self.map_comp_options_funcs()
+        self.map_out_options_funcs()
+        self.map_context_funcs()
         self.map_surface_funcs()
         self.map_nvtt_funcs()
         
@@ -63,6 +64,12 @@ class NVTT:
         
         self._lib.nvttSurfaceDepth.restype  = ctypes.c_int
         self._lib.nvttSurfaceDepth.argtypes = [self.NvttSurfacePtr]
+        
+        self._lib.nvttSurfaceCountMipmaps.restype  = ctypes.c_int
+        self._lib.nvttSurfaceCountMipmaps.argtypes = [self.NvttSurfacePtr, ctypes.c_int]
+        
+        self._lib.nvttSurfaceBuildNextMipmapDefaults.restype = ctypes.c_bool
+        self._lib.nvttSurfaceBuildNextMipmapDefaults.argtypes = [self.NvttSurfacePtr, ctypes.c_int]
         
     def map_comp_options_funcs(self):
         """Map nvttCompressionOptions functions."""
@@ -111,17 +118,57 @@ class NVTT:
         self._lib.nvttResetOutputOptions.argtypes = [self.NvttOutputOptionsPtr]
         
         self._lib.nvttSetOutputOptionsFileName.restype = None
-        self._lib.nvttSetOutputOptionsFileName.argtypes = [self.NvttOutputOptionsPtr, ctypes.POINTER(ctypes.c_char_p)]
+        self._lib.nvttSetOutputOptionsFileName.argtypes = [self.NvttOutputOptionsPtr, ctypes.c_char_p]
+        
+        self._lib.nvttSetOutputOptionsErrorHandler.restype = None
+        self._lib.nvttSetOutputOptionsErrorHandler.argtypes = [self.NvttOutputOptionsPtr, ctypes.c_int]
         
         self._lib.nvttSetOutputOptionsContainer.restype = None
         self._lib.nvttSetOutputOptionsContainer.argtypes = [self.NvttOutputOptionsPtr, ctypes.c_int]
+        
+        self._lib.nvttSetOutputOptionsOutputHeader.restype = None
+        self._lib.nvttSetOutputOptionsOutputHeader.argtypes = [self.NvttOutputOptionsPtr, ctypes.c_bool]
         
         self._lib.nvttSetOutputOptionsUserVersion.restype = None
         self._lib.nvttSetOutputOptionsUserVersion.argtypes = [self.NvttOutputOptionsPtr, ctypes.c_int]
         
         self._lib.nvttSetOutputOptionsSrgbFlag.restype = None
         self._lib.nvttSetOutputOptionsSrgbFlag.argtypes = [self.NvttOutputOptionsPtr, ctypes.c_bool]
+    
+    def map_context_funcs(self):
+        """Map nvttContext functions."""
+        self._lib.nvttCreateContext.restype = self.NvttContextPtr
+        self._lib.nvttCreateContext.argtypes = ()
         
+        self._lib.nvttDestroyContext.restype = None
+        self._lib.nvttDestroyContext.argtypes = [self.NvttContextPtr]
+        
+        self._lib.nvttSetContextCudaAcceleration.restype = None
+        self._lib.nvttSetContextCudaAcceleration.argtypes = [self.NvttContextPtr, ctypes.c_bool]
+        
+        self._lib.nvttContextIsCudaAccelerationEnabled.restype = ctypes.c_bool
+        self._lib.nvttContextIsCudaAccelerationEnabled.argtypes = [self.NvttContextPtr]
+        
+        self._lib.nvttContextOutputHeader.restype = ctypes.c_bool
+        self._lib.nvttContextOutputHeader.argtypes = [self.NvttContextPtr, 
+                                                      self.NvttSurfacePtr, 
+                                                      ctypes.c_int,
+                                                      self.NvttCompressionOptionsPtr,
+                                                      self.NvttOutputOptionsPtr]
+        
+        self._lib.nvttContextCompress.restype = ctypes.c_bool
+        self._lib.nvttContextCompress.argtypes = [self.NvttContextPtr, 
+                                                  self.NvttSurfacePtr, 
+                                                  ctypes.c_int, 
+                                                  ctypes.c_int,
+                                                  self.NvttCompressionOptionsPtr,
+                                                  self.NvttOutputOptionsPtr]
+        
+        self._lib.nvttContextEstimateSize.restype = ctypes.c_int
+        self._lib.nvttContextEstimateSize.argtypes = [self.NvttContextPtr,
+                                                      self.NvttSurfacePtr, 
+                                                      ctypes.c_int,
+                                                      self.NvttCompressionOptionsPtr]
      
     @property
     def version(self) -> int:
