@@ -26,6 +26,7 @@ from nvtt.compression import CompressionOptions
 from nvtt.output import OutputOptions
 from nvtt.context import Context
 from nvtt.enums import Format, Quality
+from pathlib import Path
 
 img_name = "texture_01.png"
 parent = Path(__file__).resolve().parent
@@ -48,6 +49,7 @@ You can also use the `EasyDDS` class for your convenience.
 
 ```python
 from nvtt.easy_dds import EasyDDS
+from pathlib import Path
 
 img_name = "texture_01.png"
 parent = Path(__file__).resolve().parent
