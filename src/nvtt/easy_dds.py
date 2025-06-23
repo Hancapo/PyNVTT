@@ -35,4 +35,4 @@ class EasyDDS:
         oo: OutputOptions = OutputOptions()
         oo.filename(inst.img_path.replace(inst.img_ext, ".dds"))
         ctx: Context = Context()
-        ctx.compress_all(surf, co, oo, 0, 4)
+        ctx.compress_all(surf, co, oo)
