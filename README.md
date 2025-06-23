@@ -1,6 +1,9 @@
-# pyNVTT
----
 
+<p align="center">
+  <img width="248" height="250" src="https://github.com/user-attachments/assets/bfda7415-5798-4de5-90cc-8a07d0b44955" alt="Pillow logo">
+</p>
+
+# pyNVTT
 ## About
 
 A simple Python Wrapper for NVTT3 library, useful to convert most relevant images formats to DDS while doing modding or game development.
