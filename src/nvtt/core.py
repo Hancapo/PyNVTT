@@ -54,6 +54,9 @@ class NVTT:
 
         self._lib.nvttDestroySurface.restype = None
         self._lib.nvttDestroySurface.argtypes = [self.NvttSurfacePtr]
+        
+        self._lib.nvttSurfaceClone.restype = self.NvttSurfacePtr
+        self._lib.nvttSurfaceClone.argtypes = [self.NvttSurfacePtr]
 
         self._lib.nvttSurfaceLoad.restype = ctypes.c_bool
         self._lib.nvttSurfaceLoad.argtypes = (

@@ -66,3 +66,12 @@ class Surface:
         return self._lib.nvttSurfaceBuildNextMipmapDefaults(
             self._ptr, int(filter), min_size, None
         )
+        
+    def clone(self) -> "Surface":
+        "Clone the current surface to a new one."
+        new_ptr = self._lib.nvttSurfaceClone(self._ptr)
+        if not new_ptr:
+            raise RuntimeError("nvttSurfaceClone error")
+        surf: Surface = Surface()
+        surf._ptr = new_ptr
+        return surf
