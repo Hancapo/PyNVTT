@@ -46,7 +46,7 @@ class Context:
                                              co._ptr, oo._ptr)
         
     def compress_all(self, surface: Surface, co: CompressionOptions, oo: OutputOptions, face=0, min_level = 1, mipmap_filter: MipmapFilter = MipmapFilter.MITCHELL, do_mips: bool = True):
-        """Compress all mipmaps of the surface."""
+        """Compresses the surface with every mipmap level and exports the result."""
         mipmap_count: int = surface.count_mipmaps(min_level) if do_mips else 1
         self.output_header(surface, mipmap_count, co, oo)
         self.compress(surface, face, 0, co, oo)
