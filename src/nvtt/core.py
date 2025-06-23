@@ -42,6 +42,9 @@ class NVTT:
         """Map NVTT functions."""
         self._lib.nvttVersion.restype = ctypes.c_uint
         self._lib.nvttVersion.argtypes = []
+        
+        self._lib.nvttIsCudaSupported.restype = ctypes.c_bool
+        self._lib.nvttIsCudaSupported.argtypes = []
 
     def map_surface_funcs(self):
         """Map nvttSurface functions."""
@@ -246,6 +249,11 @@ class NVTT:
         if self._version == 0:
             self._version = self._lib.nvttVersion()
         return self._version
+    
+    @property
+    def is_cuda_supported(self) -> bool:
+        """Check if CUDA is supported by the GPU."""
+        return self._lib.nvttIsCudaSupported()
 
 nvtt = NVTT()
 
