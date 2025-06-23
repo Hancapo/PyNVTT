@@ -25,7 +25,7 @@ class EasyDDS:
         return self._img_ext
     
     @staticmethod
-    def convert_img(path: Path | str) -> None:
+    def convert_img(path: Path | str, use_cuda: bool = False) -> None:
         """Static method to convert an image to DDS format."""
         inst = EasyDDS(path)
         surf: Surface = Surface(inst.img_path)
@@ -35,4 +35,5 @@ class EasyDDS:
         oo: OutputOptions = OutputOptions()
         oo.filename(inst.img_path.replace(inst.img_ext, ".dds"))
         ctx: Context = Context()
+        ctx.set_cuda_acceleration(use_cuda)
         ctx.compress_all(surf, co, oo)
