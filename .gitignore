@@ -22,3 +22,4 @@ __pycache__/compression_options.cpython-311.pyc
 .vscode/settings.json
 *.pyc
 /examples
+/dist
