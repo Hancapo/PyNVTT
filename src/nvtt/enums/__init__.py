@@ -10,3 +10,6 @@ from .normal_transform import NormalTransform
 from .mipmap_filter import MipmapFilter
 from .round_mode import RoundMode
 from .encode_flags import EncodeFlags
+from .wrap_mode import WrapMode
+from .texture_type import TextureType
+from .wrap_mode import WrapMode
