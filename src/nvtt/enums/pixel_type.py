@@ -1,8 +1,7 @@
 from enum import IntEnum
 
 class PixelType(IntEnum):
-    """Enum for NVTT (NVIDIA Texture Tools) pixel types."""
-    
+    """Enum for pixel types."""
     UnsignedNorm = 0
     SignedNorm = 1
     UnsignedInt = 2

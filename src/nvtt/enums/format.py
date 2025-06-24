@@ -1,7 +1,7 @@
 from enum import IntEnum
 
 class Format(IntEnum):
-    """Enum for NVTT (NVIDIA Texture Tools) formats."""
+    """Enum for DDS formats."""
     #No compression formats
     RGB = 0
     RGBA = RGB

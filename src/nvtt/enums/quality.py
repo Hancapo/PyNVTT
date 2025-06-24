@@ -1,8 +1,7 @@
 from enum import IntEnum
 
-
 class Quality(IntEnum):
-    """Enum for NVTT (NVIDIA Texture Tools) quality levels."""
+    """Enum for DDS quality levels."""
     Fastest = 0
     Normal = 1
     Production = 2

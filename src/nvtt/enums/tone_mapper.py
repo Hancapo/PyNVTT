@@ -2,9 +2,7 @@ from enum import IntEnum
 
 
 class ToneMapper(IntEnum):
-    """
-    Enum for NVTT tone mapper modes.
-    """
+    """Enum for Tone mapper modes."""
     LINEAR = 0
     REINHARD = 1
     REINHART = REINHARD

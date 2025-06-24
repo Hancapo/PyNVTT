@@ -1,9 +1,7 @@
 from enum import IntEnum
 
 class Error(IntEnum):
-    """
-    Enum for NVTT error codes.
-    """
+    """Enum for error levels of messages (Unused)."""
     NONE = 0
     UNKNOWN = NONE
     INVALID_INPUT = 1
