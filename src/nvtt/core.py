@@ -69,6 +69,21 @@ class NVTT:
         
         self._lib.nvttSurfaceIsNull.restype = ctypes.c_bool
         self._lib.nvttSurfaceIsNull.argtypes = [self.NvttSurfacePtr]
+        
+        self._lib.nvttSurfaceWidth.restype = ctypes.c_int
+        self._lib.nvttSurfaceWidth.argtypes = [self.NvttSurfacePtr]
+        
+        self._lib.nvttSurfaceHeight.restype = ctypes.c_int
+        self._lib.nvttSurfaceHeight.argtypes = [self.NvttSurfacePtr]
+
+        self._lib.nvttSurfaceDepth.restype = ctypes.c_int
+        self._lib.nvttSurfaceDepth.argtypes = [self.NvttSurfacePtr]
+        
+        self._lib.nvttSurfaceType.restype = ctypes.c_int
+        self._lib.nvttSurfaceType.argtypes = [self.NvttSurfacePtr]
+        
+        self._lib.nvttSurfaceCountMipmaps.restype = ctypes.c_int
+        self._lib.nvttSurfaceCountMipmaps.argtypes = [self.NvttSurfacePtr, ctypes.c_int]
 
         self._lib.nvttSurfaceLoad.restype = ctypes.c_bool
         self._lib.nvttSurfaceLoad.argtypes = (
@@ -79,17 +94,7 @@ class NVTT:
             ctypes.c_void_p,  # NvttTimingContext
         )
 
-        self._lib.nvttSurfaceWidth.restype = ctypes.c_int
-        self._lib.nvttSurfaceWidth.argtypes = [self.NvttSurfacePtr]
         
-        self._lib.nvttSurfaceHeight.restype = ctypes.c_int
-        self._lib.nvttSurfaceHeight.argtypes = [self.NvttSurfacePtr]
-
-        self._lib.nvttSurfaceDepth.restype = ctypes.c_int
-        self._lib.nvttSurfaceDepth.argtypes = [self.NvttSurfacePtr]
-
-        self._lib.nvttSurfaceCountMipmaps.restype = ctypes.c_int
-        self._lib.nvttSurfaceCountMipmaps.argtypes = [self.NvttSurfacePtr, ctypes.c_int]
 
         self._lib.nvttSurfaceBuildNextMipmapDefaults.restype = ctypes.c_bool
         self._lib.nvttSurfaceBuildNextMipmapDefaults.argtypes = [

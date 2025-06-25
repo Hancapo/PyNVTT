@@ -1,6 +1,6 @@
 import ctypes
 from pathlib import Path
-from .enums import MipmapFilter, WrapMode, AlphaMode
+from .enums import MipmapFilter, WrapMode, AlphaMode, TextureType
 from .core import nvtt
 
 
@@ -83,6 +83,11 @@ class Surface:
     def depth(self) -> int:
         """Get the depth of the surface."""
         return self._lib.nvttSurfaceDepth(self._ptr)
+    
+    @property
+    def type(self) -> TextureType:
+        """Get the type of the surface."""
+        return TextureType(self._lib.nvttSurfaceType(self._ptr))
 
     def count_mipmaps(self, min_size: int = 1) -> int:
         """Count the number of mipmaps in the surface."""
