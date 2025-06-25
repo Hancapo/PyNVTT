@@ -32,13 +32,13 @@ class OutputOptions:
         return self._lib.nvttSetOutputOptionsErrorHandler(self._ptr)
 
     def output_header(self, output_header: bool) -> None:
-        """Set whether to output the header."""
+        """Set output handler."""
         if not self._ptr:
             raise RuntimeError("Failed to set output header option.")
         self._lib.nvttSetOutputOptionsOutputHeader(self._ptr, output_header)
 
     def container(self, container: Container) -> None:
-        """Set the output container format."""
+        """Set container. Defaults to Container."""
         get_container: int = int(container)
         if not self._ptr:
             raise RuntimeError("Failed to set output container format.")
