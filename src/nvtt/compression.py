@@ -5,12 +5,14 @@ from .core import nvtt
 class CompressionOptions:
     """High-level wrapper for nvttCompressionOptions."""
     def __init__(self):
+        """Create a new instance of CompressionOptions."""
         self._lib = nvtt._lib
         self._ptr = nvtt._lib.nvttCreateCompressionOptions()
         if not self._ptr:
             raise RuntimeError("Failed to create nvttCompressionOptions.")
     
     def __del__(self):
+        """Destructor."""
         if getattr(self, '_ptr', None):
             self._lib.nvttDestroyCompressionOptions(self._ptr)
     
@@ -35,13 +37,13 @@ class CompressionOptions:
         self._lib.nvttSetCompressionOptionsQuality(self._ptr, get_quality)
         
     def color_weights(self, r: float, g: float, b: float, a: float):
-        """Set the color weights for compression."""
+        """Set the weights of each color channel used to measure compression error."""
         if not self._ptr:
             raise RuntimeError("Compression options have already been destroyed or not initialized.")
         self._lib.nvttSetCompressionOptionsColorWeights(self._ptr, r, g, b, a)
         
     def pixel_format(self, bitcount: int, rmask: int, gmask: int, bmask: int, amask: int):
-        """Set the pixel format."""
+        """Describes an RGB/RGBA format using 32-bit masks per channel."""
         if not self._ptr:
             raise RuntimeError("Compression options have already been destroyed or not initialized.")
         self._lib.nvttSetCompressionOptionsPixelFormat(self._ptr, bitcount, rmask, gmask, bmask, amask)
@@ -54,7 +56,7 @@ class CompressionOptions:
         self._lib.nvttSetCompressionOptionsPixelType(self._ptr, get_pixel_type)
         
     def pitch_alignment(self, alignment: int):
-        """Set the pitch alignment."""
+        """Set pitch alignment in bytes."""
         if not self._ptr:
             raise RuntimeError("Compression options have already been destroyed or not initialized.")
         self._lib.nvttSetCompressionOptionsPitchAlignment(self._ptr, alignment)
@@ -66,7 +68,7 @@ class CompressionOptions:
         self._lib.nvttSetCompressionOptionsQuantization(self._ptr, color_dithering, alpha_dithering, binary_alpha, alpha_threshold)
         
     def d3d9_format(self) -> int:
-        """Get the D3D9 format."""
+        """Translates to a D3D format. Returns 0 if no corresponding format could be found."""
         if not self._ptr:
             raise RuntimeError("Compression options have already been destroyed or not initialized.")
         return self._lib.nvttGetCompressionOptionsD3D9Format(self._ptr)
