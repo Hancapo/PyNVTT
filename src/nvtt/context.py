@@ -6,7 +6,7 @@ from .enums import MipmapFilter
 from .core import nvtt
 
 class Context:
-    """Context for NVTT operations."""
+    """High-level wrapper for nvttContext."""
     
     def __init__(self):
         """Creates a new instance of Context."""
