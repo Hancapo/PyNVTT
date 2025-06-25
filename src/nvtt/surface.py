@@ -8,6 +8,7 @@ class Surface:
     """High-level wrapper for nvttSurface."""
 
     def __init__(self, filepath: str = None):
+        """Creates an empty surface."""
         self._lib = nvtt._lib
         self._ptr = nvtt._lib.nvttCreateSurface()
         self._has_alpha = None
@@ -16,11 +17,12 @@ class Surface:
         self.load(filepath) if filepath else None
 
     def __del__(self):
+        """Destructor."""
         if getattr(self, "_ptr", None):
             self._lib.nvttDestroySurface(self._ptr)
 
     def clone(self) -> "Surface":
-        "Clone the current surface to a new one."
+        "Creates a deep copy of this Surface, with its own internal data."
         new_ptr = self._lib.nvttSurfaceClone(self._ptr)
         if not new_ptr:
             raise RuntimeError("nvttSurfaceClone error")
@@ -30,12 +32,12 @@ class Surface:
 
     @property
     def wrap_mode(self) -> WrapMode:
-        """Get the wrap mode of the surface."""
+        """Returns the wrap mode of the surface."""
         return WrapMode(self._lib.nvttSurfaceWrapMode(self._ptr))
 
     @wrap_mode.setter
     def wrap_mode(self, value: WrapMode) -> None:
-        """Set the wrap mode of the surface."""
+        """Set the Surface's wrap mode."""
         if not isinstance(value, WrapMode):
             raise TypeError("value must be WrapMode")
         self._lib.nvttSetSurfaceWrapMode(self._ptr, int(value))
@@ -47,12 +49,12 @@ class Surface:
 
     @property
     def normal_map(self) -> bool:
-        """Check if the surface is a normal map."""
+        """Returns whether the image represents a normal map."""
         return bool(self._lib.nvttSurfaceIsNormalMap(self._ptr))
 
     @normal_map.setter
     def normal_map(self, value: bool) -> None:
-        """Set the surface as a normal map."""
+        """Set whether the Surface represents a normal map, affects whether DDS files are written with the normal map flag"""
         if not isinstance(value, bool):
             raise TypeError("value must be bool")
         self._lib.nvttSetSurfaceNormalMap(self._ptr, value)
@@ -66,34 +68,45 @@ class Surface:
 
     @property
     def is_null(self) -> bool:
-        """Returns whether the surface is null."""
+        """Returns if the surface is null."""
         return bool(self._lib.nvttSurfaceIsNull(self._ptr))
 
     @property
     def width(self) -> int:
-        """Get the width of the surface."""
+        """Returns the width (X size) of the surface."""
         return self._lib.nvttSurfaceWidth(self._ptr)
 
     @property
     def height(self) -> int:
-        """Get the height of the surface."""
+        """Returns the height (Y size) of the surface."""
         return self._lib.nvttSurfaceHeight(self._ptr)
 
     @property
     def depth(self) -> int:
-        """Get the depth of the surface."""
+        """Returns the depth (Z size) of the surface. 1 for 2D surfaces."""
         return self._lib.nvttSurfaceDepth(self._ptr)
-    
+
     @property
     def type(self) -> TextureType:
-        """Get the type of the surface."""
+        """Returns the dimensionality of the surface."""
         return TextureType(self._lib.nvttSurfaceType(self._ptr))
 
     def count_mipmaps(self, min_size: int = 1) -> int:
-        """Count the number of mipmaps in the surface."""
+        """Returns the number of mipmaps in a mipmap chain."""
         return self._lib.nvttSurfaceCountMipmaps(self._ptr, min_size)
 
+    def alpha_test_coverage(self, alpha_ref: float, alpha_channel: int) -> float:
+        """Computes the average of a channel, possibly with alpha or with a gamma transfer function."""
+        if not (0 <= alpha_ref <= 1):
+            raise ValueError("alpha_ref must be between 0 and 1")
+        if not (0 <= alpha_channel < 4):
+            raise ValueError("alpha_channel must be between 0 and 3")
+        return self._lib.nvttSurfaceAlphaTestCoverage(
+            self._ptr, alpha_ref, alpha_channel
+        )
+
     def load(self, filename: str, expect_signed: bool = False) -> bool:
+        """Loads texture data from a file."""
         if not Path.exists(Path(filename)):
             raise FileNotFoundError(f"File {filename} does not exist.")
 
@@ -111,7 +124,7 @@ class Surface:
         return self._has_alpha
 
     def build_next_mipmap(self, filter: MipmapFilter, min_size: int = 1) -> bool:
-        """Build the next mipmap level."""
+        """Replaces this surface with a surface the size of the next mip in a mip chain (half the width and height), but with each channel cleared to a constant value."""
         if not self._ptr:
             raise RuntimeError("Surface has already been destroyed or not initialized.")
         return self._lib.nvttSurfaceBuildNextMipmapDefaults(
@@ -120,7 +133,7 @@ class Surface:
 
     @property
     def has_alpha(self) -> bool:
-        """Check if the surface has an alpha channel."""
+        """Returns if the surface has an alpha channel."""
         if self._has_alpha is None:
             raise RuntimeError("Surface has not been loaded or has been destroyed.")
         return self._has_alpha

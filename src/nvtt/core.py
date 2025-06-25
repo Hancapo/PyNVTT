@@ -84,6 +84,9 @@ class NVTT:
         
         self._lib.nvttSurfaceCountMipmaps.restype = ctypes.c_int
         self._lib.nvttSurfaceCountMipmaps.argtypes = [self.NvttSurfacePtr, ctypes.c_int]
+        
+        self._lib.nvttSurfaceAlphaTestCoverage.restype = ctypes.c_float
+        self._lib.nvttSurfaceAlphaTestCoverage.argtypes = [self.NvttSurfacePtr, ctypes.c_float, ctypes.c_int]
 
         self._lib.nvttSurfaceLoad.restype = ctypes.c_bool
         self._lib.nvttSurfaceLoad.argtypes = (
