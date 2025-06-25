@@ -97,10 +97,6 @@ class Surface:
 
     def alpha_test_coverage(self, alpha_ref: float, alpha_channel: int) -> float:
         """Computes the average of a channel, possibly with alpha or with a gamma transfer function."""
-        if not (0 <= alpha_ref <= 1):
-            raise ValueError("alpha_ref must be between 0 and 1")
-        if not (0 <= alpha_channel < 4):
-            raise ValueError("alpha_channel must be between 0 and 3")
         return self._lib.nvttSurfaceAlphaTestCoverage(
             self._ptr, alpha_ref, alpha_channel
         )
