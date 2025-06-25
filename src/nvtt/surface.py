@@ -29,6 +29,47 @@ class Surface:
         return surf
 
     @property
+    def wrap_mode(self) -> WrapMode:
+        """Get the wrap mode of the surface."""
+        return WrapMode(self._lib.nvttSurfaceWrapMode(self._ptr))
+
+    @wrap_mode.setter
+    def wrap_mode(self, value: WrapMode) -> None:
+        """Set the wrap mode of the surface."""
+        if not isinstance(value, WrapMode):
+            raise TypeError("value must be WrapMode")
+        self._lib.nvttSetSurfaceWrapMode(self._ptr, int(value))
+
+    @property
+    def alpha_mode(self) -> AlphaMode:
+        """Get the alpha mode of the surface."""
+        return AlphaMode(self._lib.nvttSurfaceAlphaMode(self._ptr))
+
+    @property
+    def normal_map(self) -> bool:
+        """Check if the surface is a normal map."""
+        return bool(self._lib.nvttSurfaceIsNormalMap(self._ptr))
+
+    @normal_map.setter
+    def normal_map(self, value: bool) -> None:
+        """Set the surface as a normal map."""
+        if not isinstance(value, bool):
+            raise TypeError("value must be bool")
+        self._lib.nvttSetSurfaceNormalMap(self._ptr, value)
+
+    @alpha_mode.setter
+    def alpha_mode(self, value: AlphaMode) -> None:
+        """Set the alpha mode of the surface."""
+        if not isinstance(value, AlphaMode):
+            raise TypeError("value must be AlphaMode")
+        self._lib.nvttSetSurfaceAlphaMode(self._ptr, int(value))
+
+    @property
+    def is_null(self) -> bool:
+        """Returns whether the surface is null."""
+        return bool(self._lib.nvttSurfaceIsNull(self._ptr))
+
+    @property
     def width(self) -> int:
         """Get the width of the surface."""
         return self._lib.nvttSurfaceWidth(self._ptr)
@@ -42,42 +83,6 @@ class Surface:
     def depth(self) -> int:
         """Get the depth of the surface."""
         return self._lib.nvttSurfaceDepth(self._ptr)
-    
-    @property
-    def wrap_mode(self) -> WrapMode:
-        """Get the wrap mode of the surface."""
-        return WrapMode(self._lib.nvttSurfaceWrapMode(self._ptr))
-    
-    @wrap_mode.setter
-    def wrap_mode(self, value: WrapMode) -> None:
-        """Set the wrap mode of the surface."""
-        if not isinstance(value, WrapMode):
-            raise TypeError("value must be WrapMode")
-        self._lib.nvttSetSurfaceWrapMode(self._ptr, int(value))
-        
-    @property
-    def alpha_mode(self) -> AlphaMode:
-        """Get the alpha mode of the surface."""
-        return AlphaMode(self._lib.nvttSurfaceAlphaMode(self._ptr))
-    
-    @property
-    def normal_map(self) -> bool:
-        """Check if the surface is a normal map."""
-        return bool(self._lib.nvttSurfaceIsNormalMap(self._ptr))
-    
-    @normal_map.setter
-    def normal_map(self, value: bool) -> None:
-        """Set the surface as a normal map."""
-        if not isinstance(value, bool):
-            raise TypeError("value must be bool")
-        self._lib.nvttSetSurfaceNormalMap(self._ptr, value)
-    
-    @alpha_mode.setter
-    def alpha_mode(self, value: AlphaMode) -> None:
-        """Set the alpha mode of the surface."""
-        if not isinstance(value, AlphaMode):
-            raise TypeError("value must be AlphaMode")
-        self._lib.nvttSetSurfaceAlphaMode(self._ptr, int(value))
 
     def count_mipmaps(self, min_size: int = 1) -> int:
         """Count the number of mipmaps in the surface."""
