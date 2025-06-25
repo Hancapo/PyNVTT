@@ -9,12 +9,14 @@ class Context:
     """Context for NVTT operations."""
     
     def __init__(self):
+        """Creates a new instance of Context."""
         self._lib = nvtt._lib
         self._ptr = nvtt._lib.nvttCreateContext()
         if not self._ptr:
             raise RuntimeError("Failed to create NVTT context.")
         
     def __del__(self):
+        """Destructor."""
         if getattr(self, '_ptr', None):
             self._lib.nvttDestroyContext(self._ptr)
             
