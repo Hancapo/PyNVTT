@@ -63,6 +63,9 @@ class NVTT:
         
         self._lib.nvttSetSurfaceAlphaMode.restype = None
         self._lib.nvttSetSurfaceAlphaMode.argtypes = [self.NvttSurfacePtr, ctypes.c_int]
+        
+        self._lib.nvttSetSurfaceNormalMap.restype = None
+        self._lib.nvttSetSurfaceNormalMap.argtypes = [self.NvttSurfacePtr, ctypes.c_bool]
 
         self._lib.nvttSurfaceLoad.restype = ctypes.c_bool
         self._lib.nvttSurfaceLoad.argtypes = (

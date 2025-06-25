@@ -60,6 +60,18 @@ class Surface:
         """Get the alpha mode of the surface."""
         return AlphaMode(self._lib.nvttSurfaceAlphaMode(self._ptr))
     
+    @property
+    def normal_map(self) -> bool:
+        """Check if the surface is a normal map."""
+        return bool(self._lib.nvttSurfaceIsNormalMap(self._ptr))
+    
+    @normal_map.setter
+    def normal_map(self, value: bool) -> None:
+        """Set the surface as a normal map."""
+        if not isinstance(value, bool):
+            raise TypeError("value must be bool")
+        self._lib.nvttSetSurfaceNormalMap(self._ptr, value)
+    
     @alpha_mode.setter
     def alpha_mode(self, value: AlphaMode) -> None:
         """Set the alpha mode of the surface."""
