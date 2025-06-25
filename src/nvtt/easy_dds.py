@@ -35,5 +35,5 @@ class EasyDDS:
         oo: OutputOptions = OutputOptions()
         oo.filename(inst.img_path.replace(inst.img_ext, ".dds"))
         ctx: Context = Context()
-        ctx.set_cuda_acceleration(use_cuda)
+        ctx.enable_cuda_acceleration(use_cuda)
         ctx.compress_all(surf, co, oo)

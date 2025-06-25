@@ -18,8 +18,8 @@ class Context:
         if getattr(self, '_ptr', None):
             self._lib.nvttDestroyContext(self._ptr)
             
-    def set_cuda_acceleration(self, enabled: bool):
-        """Enable or disable CUDA acceleration."""
+    def enable_cuda_acceleration(self, enabled: bool):
+        """Enable CUDA acceleration; initializes CUDA if not already initialized.."""
         if not self._ptr:
             raise RuntimeError("Context has already been destroyed or not initialized.")
         self._lib.nvttSetContextCudaAcceleration(self._ptr, ctypes.c_bool(enabled))
@@ -32,21 +32,21 @@ class Context:
         return self._lib.nvttContextIsCudaAccelerationEnabled(self._ptr)
     
     def output_header(self, surface: Surface, mipmap_count: int, co: CompressionOptions, oo: OutputOptions):
-        """Output the header for the given surface."""
+        """Write the #Container's header to the output."""
         if not self._ptr:
             raise RuntimeError("Context has already been destroyed or not initialized.")
         return self._lib.nvttContextOutputHeader(self._ptr, surface._ptr, mipmap_count, 
                                                  co._ptr, oo._ptr)
         
     def compress(self, surface: Surface, face: int, mipmap: int, co: CompressionOptions, oo: OutputOptions):
-        """Compress the given surface."""
+        """Compress the Surface and write the compressed data to the output."""
         if not self._ptr:
             raise RuntimeError("Context has already been destroyed or not initialized.")
         return self._lib.nvttContextCompress(self._ptr, surface._ptr, face, mipmap, 
                                              co._ptr, oo._ptr)
         
     def compress_all(self, surface: Surface, co: CompressionOptions, oo: OutputOptions, face=0, min_level = 1, mipmap_filter: MipmapFilter = MipmapFilter.MITCHELL, do_mips: bool = True):
-        """Compresses the surface with every mipmap level and exports the result."""
+        """Compress the Surface and write the compressed data to the output including all mipmap levels at once."""
         mipmap_count: int = surface.count_mipmaps(min_level) if do_mips else 1
         self.output_header(surface, mipmap_count, co, oo)
         self.compress(surface, face, 0, co, oo)
@@ -61,7 +61,7 @@ class Context:
                 raise RuntimeError(f"Failed to compress the {surface._ptr} surface.")
         
     def estimate_size(self, surface: Surface, mipmap_count: int, co: CompressionOptions):
-        """Estimate the size of the compressed data for the given surface."""
+        """Returns the total compressed size of mips, without compressing the image."""
         if not self._ptr:
             raise RuntimeError("Context has already been destroyed or not initialized.")
         return self._lib.nvttContextEstimateSize(self._ptr, surface._ptr, mipmap_count, co._ptr)
