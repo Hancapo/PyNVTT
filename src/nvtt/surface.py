@@ -1,6 +1,6 @@
 import ctypes
 from pathlib import Path
-from .enums import MipmapFilter, WrapMode
+from .enums import MipmapFilter, WrapMode, AlphaMode
 from .core import nvtt
 
 
@@ -54,6 +54,18 @@ class Surface:
         if not isinstance(value, WrapMode):
             raise TypeError("value must be WrapMode")
         self._lib.nvttSetSurfaceWrapMode(self._ptr, int(value))
+        
+    @property
+    def alpha_mode(self) -> AlphaMode:
+        """Get the alpha mode of the surface."""
+        return AlphaMode(self._lib.nvttSurfaceAlphaMode(self._ptr))
+    
+    @alpha_mode.setter
+    def alpha_mode(self, value: AlphaMode) -> None:
+        """Set the alpha mode of the surface."""
+        if not isinstance(value, AlphaMode):
+            raise TypeError("value must be AlphaMode")
+        self._lib.nvttSetSurfaceAlphaMode(self._ptr, int(value))
 
     def count_mipmaps(self, min_size: int = 1) -> int:
         """Count the number of mipmaps in the surface."""

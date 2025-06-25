@@ -60,6 +60,9 @@ class NVTT:
         
         self._lib.nvttSetSurfaceWrapMode.restype = None
         self._lib.nvttSetSurfaceWrapMode.argtypes = [self.NvttSurfacePtr, ctypes.c_int]
+        
+        self._lib.nvttSetSurfaceAlphaMode.restype = None
+        self._lib.nvttSetSurfaceAlphaMode.argtypes = [self.NvttSurfacePtr, ctypes.c_int]
 
         self._lib.nvttSurfaceLoad.restype = ctypes.c_bool
         self._lib.nvttSurfaceLoad.argtypes = (
