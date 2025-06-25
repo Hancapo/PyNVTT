@@ -5,3 +5,4 @@ class AlphaMode(IntEnum):
     NONE = 0
     TRANSPARENCY = 1
     PREMULTIPLIED = 2
+    

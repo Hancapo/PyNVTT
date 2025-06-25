@@ -57,6 +57,9 @@ class NVTT:
         
         self._lib.nvttSurfaceClone.restype = self.NvttSurfacePtr
         self._lib.nvttSurfaceClone.argtypes = [self.NvttSurfacePtr]
+        
+        self._lib.nvttSetSurfaceWrapMode.restype = None
+        self._lib.nvttSetSurfaceWrapMode.argtypes = [self.NvttSurfacePtr, ctypes.c_int]
 
         self._lib.nvttSurfaceLoad.restype = ctypes.c_bool
         self._lib.nvttSurfaceLoad.argtypes = (
@@ -69,6 +72,7 @@ class NVTT:
 
         self._lib.nvttSurfaceWidth.restype = ctypes.c_int
         self._lib.nvttSurfaceWidth.argtypes = [self.NvttSurfacePtr]
+        
         self._lib.nvttSurfaceHeight.restype = ctypes.c_int
         self._lib.nvttSurfaceHeight.argtypes = [self.NvttSurfacePtr]
 
