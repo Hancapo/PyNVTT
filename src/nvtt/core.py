@@ -1,14 +1,26 @@
 import ctypes
 from pathlib import Path
-
+import sys
 LIBRARY_PATH = Path(Path(__file__).parent) / "libs"
 
-NVTT_DLL_NAME: str = "nvtt30205.dll"
+WINDOWS_NVTT: str = "nvtt30205.dll"
+LINUX_NVTT: str = "libnvtt.so.30205"
 
 
 class NVTT:
     """Wrapper for the NVIDIA Texture Tools (nvtt) library."""
-    def __init__(self, dll_path: str = str(Path.joinpath(LIBRARY_PATH, NVTT_DLL_NAME))):
+    def __init__(self):
+        dll_path: str = None
+        if sys.platform.startswith("win"):
+            dll_path = str(LIBRARY_PATH / WINDOWS_NVTT)
+        elif sys.platform.startswith("linux"):
+            dll_path = str(LIBRARY_PATH / LINUX_NVTT)
+        else:
+            raise RuntimeError("Unsupported platform for NVTT library.")
+        
+        if not dll_path:
+            raise RuntimeError("NVTT library not found at expected path: {}".format(dll_path))
+        
         self._lib = ctypes.CDLL(dll_path)
         self._version: int = 0
 
@@ -87,6 +99,12 @@ class NVTT:
         
         self._lib.nvttSurfaceAlphaTestCoverage.restype = ctypes.c_float
         self._lib.nvttSurfaceAlphaTestCoverage.argtypes = [self.NvttSurfacePtr, ctypes.c_float, ctypes.c_int]
+        
+        self._lib.nvttSurfaceAverage.restype = ctypes.c_float
+        self._lib.nvttSurfaceAverage.argtypes = [self.NvttSurfacePtr, ctypes.c_int, ctypes.c_int, ctypes.c_float]
+        
+        self._lib.nvttSurfaceData.restype = ctypes.POINTER(ctypes.c_float)
+        self._lib.nvttSurfaceData.argtypes = [self.NvttSurfacePtr]
 
         self._lib.nvttSurfaceLoad.restype = ctypes.c_bool
         self._lib.nvttSurfaceLoad.argtypes = (
