@@ -1,7 +1,6 @@
 from enum import IntEnum
 
-class MipmapFilter(IntEnum):
-    """Enum for mipmap filter modes used in mipmap generation."""
+class Filters(IntEnum):
     BOX = 0
     TRIANGLE = 1
     KAISER = 2

@@ -133,12 +133,31 @@ class NVTT:
             ctypes.c_bool,
             ctypes.c_void_p
         )
-
+        
+        #Ignore SetImage
+        #Ignore SetImageData
+        #Ignore SetImageRGBA
+        #Ignore SetImage2D
+        #Ignore SetImage3D
+        
+        self._lib.nvttSurfaceResize.restype = None
+        self._lib.nvttSurfaceResize.argtypes = [
+            self.NvttSurfacePtr,
+            ctypes.c_int,  # width
+            ctypes.c_int,  # height
+            ctypes.c_int,  # depth
+            ctypes.c_int,  # ResizeFilter
+            ctypes.c_float, # filterWidth
+            ctypes.POINTER(ctypes.c_float),  # params
+            ctypes.c_void_p # NvttTimingContext
+        ]
+        
         self._lib.nvttSurfaceBuildNextMipmapDefaults.restype = ctypes.c_bool
         self._lib.nvttSurfaceBuildNextMipmapDefaults.argtypes = [
             self.NvttSurfacePtr,
             ctypes.c_int,
         ]
+        
 
     def map_comp_options_funcs(self):
         """Map nvttCompressionOptions functions."""

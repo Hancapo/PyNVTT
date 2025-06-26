@@ -1,6 +1,7 @@
 import ctypes
 from pathlib import Path
-from .enums import MipmapFilter, WrapMode, AlphaMode, TextureType, Channel
+from .enums import Filters, WrapMode, AlphaMode, TextureType, Channel, RoundMode
+ 
 from .core import nvtt
 
 
@@ -157,8 +158,21 @@ class Surface:
         if not result:
             raise RuntimeError(f"Failed to save texture to {file_name}.")
         return result
+    
+    def resize(self, width: int, 
+               height: int, 
+               depth: int = 1, 
+               filter: Filters = Filters.KAISER,
+               filter_width: float = 1.0,
+               ) -> None:
+        """Resizes this surface to have size (`width` x `height` x `depth`) using a given filter."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        self._lib.nvttSurfaceResize(self._ptr, width, height, depth, int(filter), filter_width, None, None)
+        
+        
 
-    def build_next_mipmap(self, filter: MipmapFilter, min_size: int = 1) -> bool:
+    def build_next_mipmap(self, filter: Filters, min_size: int = 1) -> bool:
         """Replaces this surface with a surface the size of the next mip in a mip chain (half the width and height), but with each channel cleared to a constant value."""
         if not self._ptr:
             raise RuntimeError("Surface has already been destroyed or not initialized.")

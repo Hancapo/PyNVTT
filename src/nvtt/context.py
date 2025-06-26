@@ -2,7 +2,7 @@ import ctypes
 from .surface import Surface
 from .compression import CompressionOptions
 from .output import OutputOptions
-from .enums import MipmapFilter
+from .enums import Filters
 from .core import nvtt
 
 class Context:
@@ -47,7 +47,7 @@ class Context:
         return self._lib.nvttContextCompress(self._ptr, surface._ptr, face, mipmap, 
                                              co._ptr, oo._ptr)
         
-    def compress_all(self, surface: Surface, co: CompressionOptions, oo: OutputOptions, face=0, min_level = 1, mipmap_filter: MipmapFilter = MipmapFilter.MITCHELL, do_mips: bool = True):
+    def compress_all(self, surface: Surface, co: CompressionOptions, oo: OutputOptions, face=0, min_level = 1, mipmap_filter: Filters = Filters.MITCHELL, do_mips: bool = True):
         """Compress the Surface and write the compressed data to the output including all mipmap levels at once."""
         mipmap_count: int = surface.count_mipmaps(min_level) if do_mips else 1
         self.output_header(surface, mipmap_count, co, oo)

@@ -1,3 +1,4 @@
+from .filters import Filters
 from .format import Format
 from .quality import Quality
 from .pixel_type import PixelType
@@ -7,7 +8,6 @@ from .alpha_mode import AlphaMode
 from .error import Error
 from .tone_mapper import ToneMapper
 from .normal_transform import NormalTransform
-from .mipmap_filter import MipmapFilter
 from .round_mode import RoundMode
 from .encode_flags import EncodeFlags
 from .wrap_mode import WrapMode
