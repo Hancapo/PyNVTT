@@ -148,6 +148,15 @@ class Surface:
         
         self._has_alpha = has_alpha.value
         return self._has_alpha
+    
+    def save(self, file_name: str, is_hdr: bool = False) -> bool:
+        """Saves the surface to a file."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        result = self._lib.nvttSurfaceSave(self._ptr, file_name.encode("utf-8"), self.has_alpha, is_hdr, None)
+        if not result:
+            raise RuntimeError(f"Failed to save texture to {file_name}.")
+        return result
 
     def build_next_mipmap(self, filter: MipmapFilter, min_size: int = 1) -> bool:
         """Replaces this surface with a surface the size of the next mip in a mip chain (half the width and height), but with each channel cleared to a constant value."""

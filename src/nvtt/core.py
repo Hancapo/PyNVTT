@@ -124,8 +124,15 @@ class NVTT:
             ctypes.c_bool,  # expectSigned
             ctypes.c_void_p,  # NvttTimingContext
         )
-
         
+        self._lib.nvttSurfaceSave.restype = ctypes.c_bool
+        self._lib.nvttSurfaceSave.argtypes = (
+            self.NvttSurfacePtr,
+            ctypes.c_char_p,
+            ctypes.c_bool,
+            ctypes.c_bool,
+            ctypes.c_void_p
+        )
 
         self._lib.nvttSurfaceBuildNextMipmapDefaults.restype = ctypes.c_bool
         self._lib.nvttSurfaceBuildNextMipmapDefaults.argtypes = [
