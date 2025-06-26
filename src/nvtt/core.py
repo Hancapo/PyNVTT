@@ -146,9 +146,18 @@ class NVTT:
             ctypes.c_int,  # width
             ctypes.c_int,  # height
             ctypes.c_int,  # depth
-            ctypes.c_int,  # ResizeFilter
+            ctypes.c_int,  # Filter
             ctypes.c_float, # filterWidth
             ctypes.POINTER(ctypes.c_float),  # params
+            ctypes.c_void_p # NvttTimingContext
+        ]
+        
+        self._lib.nvttSurfaceResizeMax.restype = None
+        self._lib.nvttSurfaceResizeMax.argtypes = [
+            self.NvttSurfacePtr,
+            ctypes.c_int,  # maxExtent
+            ctypes.c_int,  # RoundMode
+            ctypes.c_int,  # Filter
             ctypes.c_void_p # NvttTimingContext
         ]
         
@@ -157,6 +166,7 @@ class NVTT:
             self.NvttSurfacePtr,
             ctypes.c_int,
         ]
+        
         
 
     def map_comp_options_funcs(self):
