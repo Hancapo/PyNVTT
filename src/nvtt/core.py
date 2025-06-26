@@ -100,16 +100,26 @@ class NVTT:
         self._lib.nvttSurfaceAlphaTestCoverage.restype = ctypes.c_float
         self._lib.nvttSurfaceAlphaTestCoverage.argtypes = [self.NvttSurfacePtr, ctypes.c_float, ctypes.c_int]
         
-        self._lib.nvttSurfaceAverage.restype = ctypes.c_float
-        self._lib.nvttSurfaceAverage.argtypes = [self.NvttSurfacePtr, ctypes.c_int, ctypes.c_int, ctypes.c_float]
-        
-        self._lib.nvttSurfaceData.restype = ctypes.POINTER(ctypes.c_float)
-        self._lib.nvttSurfaceData.argtypes = [self.NvttSurfacePtr]
+        #Ignore Average
+        #Ignore Data
+        #Ignore channel
+        #Ignore Histogram
+        #Ignore Range
 
         self._lib.nvttSurfaceLoad.restype = ctypes.c_bool
         self._lib.nvttSurfaceLoad.argtypes = (
             self.NvttSurfacePtr,  # Surface
             ctypes.c_char_p,  # filename
+            ctypes.POINTER(ctypes.c_bool),  # hasAlpha
+            ctypes.c_bool,  # expectSigned
+            ctypes.c_void_p,  # NvttTimingContext
+        )
+        
+        self._lib.nvttSurfaceLoadFromMemory.restype = ctypes.c_bool
+        self._lib.nvttSurfaceLoadFromMemory.argtypes = (
+            self.NvttSurfacePtr,  # Surface
+            ctypes.c_void_p,
+            ctypes.c_ulonglong,
             ctypes.POINTER(ctypes.c_bool),  # hasAlpha
             ctypes.c_bool,  # expectSigned
             ctypes.c_void_p,  # NvttTimingContext

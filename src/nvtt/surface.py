@@ -1,6 +1,6 @@
 import ctypes
 from pathlib import Path
-from .enums import MipmapFilter, WrapMode, AlphaMode, TextureType
+from .enums import MipmapFilter, WrapMode, AlphaMode, TextureType, Channel
 from .core import nvtt
 
 
@@ -46,6 +46,13 @@ class Surface:
     def alpha_mode(self) -> AlphaMode:
         """Get the alpha mode of the surface."""
         return AlphaMode(self._lib.nvttSurfaceAlphaMode(self._ptr))
+    
+    @alpha_mode.setter
+    def alpha_mode(self, value: AlphaMode) -> None:
+        """Set the alpha mode of the surface."""
+        if not isinstance(value, AlphaMode):
+            raise TypeError("value must be AlphaMode")
+        self._lib.nvttSetSurfaceAlphaMode(self._ptr, int(value))
 
     @property
     def normal_map(self) -> bool:
@@ -58,13 +65,6 @@ class Surface:
         if not isinstance(value, bool):
             raise TypeError("value must be bool")
         self._lib.nvttSetSurfaceNormalMap(self._ptr, value)
-
-    @alpha_mode.setter
-    def alpha_mode(self, value: AlphaMode) -> None:
-        """Set the alpha mode of the surface."""
-        if not isinstance(value, AlphaMode):
-            raise TypeError("value must be AlphaMode")
-        self._lib.nvttSetSurfaceAlphaMode(self._ptr, int(value))
 
     @property
     def is_null(self) -> bool:
@@ -96,26 +96,56 @@ class Surface:
         return self._lib.nvttSurfaceCountMipmaps(self._ptr, min_size)
 
     def alpha_test_coverage(self, alpha_ref: float, alpha_channel: int) -> float:
-        """Computes the average of a channel, possibly with alpha or with a gamma transfer function."""
+        """Returns the approximate fraction (0 to 1) of the image with an alpha value greater than `alpha_ref`."""
         return self._lib.nvttSurfaceAlphaTestCoverage(
             self._ptr, alpha_ref, alpha_channel
         )
+        
+    def histogram(self, channel: Channel, range_max: float, bin_count: int) -> None:
+        """Fills a histogram with the values of the specified channel."""
 
-    def load(self, filename: str, expect_signed: bool = False) -> bool:
+        histogram = (ctypes.c_float * bin_count)()
+        self._lib.nvttSurfaceHistogram(
+            self._ptr, int(channel), range_max, bin_count, histogram
+        )
+        return histogram
+
+    def load(self, file: str, expect_signed: bool = False) -> bool:
         """Loads texture data from a file."""
-        if not Path.exists(Path(filename)):
-            raise FileNotFoundError(f"File {filename} does not exist.")
+        if not Path.exists(Path(file)):
+            raise FileNotFoundError(f"File {file} does not exist.")
 
         has_alpha = ctypes.c_bool(False)
         result = self._lib.nvttSurfaceLoad(
             self._ptr,
-            filename.encode("utf-8"),
+            file.encode("utf-8"),
             ctypes.byref(has_alpha),
             expect_signed,
             None,
         )
         if not result:
-            raise RuntimeError(f"Failed to load texture from {filename}.")
+            raise RuntimeError(f"Failed to load texture from {file}.")
+        self._has_alpha = has_alpha.value
+        return self._has_alpha
+    
+    def load_from_memory(self, data: bytes, expect_signed: bool = False) -> bool:
+        """Variant of load() that reads from memory instead of a file."""
+        size: int = len(data)
+        has_alpha = ctypes.c_bool(False)
+        ArrayType = ctypes.c_ubyte * size
+        buf = ArrayType.from_buffer_copy(data)
+        bytes_ptr = ctypes.cast(buf, ctypes.c_void_p)
+        result = self._lib.nvttSurfaceLoadFromMemory(
+            self._ptr,
+            bytes_ptr,
+            size,
+            ctypes.byref(has_alpha),
+            expect_signed,
+            None
+        )
+        if not result:
+            raise RuntimeError("Failed to load texture from memory.")
+        
         self._has_alpha = has_alpha.value
         return self._has_alpha
 

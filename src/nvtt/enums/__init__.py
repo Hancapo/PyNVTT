@@ -13,3 +13,4 @@ from .encode_flags import EncodeFlags
 from .wrap_mode import WrapMode
 from .texture_type import TextureType
 from .wrap_mode import WrapMode
+from .channel import Channel
