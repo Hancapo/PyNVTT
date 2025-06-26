@@ -39,7 +39,7 @@ compression.format(Format.DXT1)
 compression.quality(Quality.Normal)
 
 output = OutputOptions()
-output.filename(img_name.split('.')[0] + ".dds")
+output.filename(img.split('.')[0] + ".dds")
 
 context = Context()
 context.compress_all(img_surface, compression, output)
