@@ -1,21 +1,32 @@
 import ctypes
 from pathlib import Path
-from .enums import Filters, WrapMode, AlphaMode, TextureType, Channel, RoundMode
- 
+from .enums import Filters, WrapMode, AlphaMode, TextureType, Channel, RoundMode, ImageType
+from nvtt.image_helper import get_bytes_from_image
 from .core import nvtt
 
 
 class Surface:
     """High-level wrapper for nvttSurface."""
 
-    def __init__(self, filepath: str = None):
+    def __init__(self, image = None):
         """Creates an empty surface."""
         self._lib = nvtt._lib
         self._ptr = nvtt._lib.nvttCreateSurface()
         self._has_alpha = None
         if not self._ptr:
             raise RuntimeError("Failed to create nvttSurface.")
-        self.load(filepath) if filepath else None
+        
+        if image is not None:
+            if(type(image) is str):
+                if not self.load(image):
+                    raise RuntimeError(f"Failed to load image from file: {image}")
+            else:
+                img_bytes: bytes = get_bytes_from_image(image)
+                if img_bytes is not None:
+                    if not self.load_from_memory(img_bytes):
+                        raise RuntimeError("Failed to load image from memory.")
+                else:
+                    raise TypeError("image must be a file path or an image object.")
 
     def __del__(self):
         """Destructor."""
@@ -127,7 +138,7 @@ class Surface:
         if not result:
             raise RuntimeError(f"Failed to load texture from {file}.")
         self._has_alpha = has_alpha.value
-        return self._has_alpha
+        return True
     
     def load_from_memory(self, data: bytes, expect_signed: bool = False) -> bool:
         """Variant of load() that reads from memory instead of a file."""
@@ -148,7 +159,7 @@ class Surface:
             raise RuntimeError("Failed to load texture from memory.")
         
         self._has_alpha = has_alpha.value
-        return self._has_alpha
+        return True
     
     def save(self, file_name: str, is_hdr: bool = False) -> bool:
         """Saves the surface to a file."""
