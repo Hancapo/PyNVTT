@@ -183,6 +183,12 @@ class Surface:
         if self.is_null:
             raise RuntimeError("Surface is null or has not been initialized.")
         self._lib.nvttSurfaceResizeMax(self._ptr, max_extent, int(mode), int(filter), None)
+        
+    def resize_make_square(self, max_extent: int, mode: RoundMode = RoundMode.NONE, filter: Filters = Filters.KAISER) -> None:
+        """Resizes this surface so that its longest side has length `max_entent` and the result is square or cubical."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        self._lib.nvttSurfaceResizeMakeSquare(self._ptr, max_extent, int(mode), int(filter), None)
 
     def build_next_mipmap(self, filter: Filters, min_size: int = 1) -> bool:
         """Replaces this surface with a surface the size of the next mip in a mip chain (half the width and height), but with each channel cleared to a constant value."""

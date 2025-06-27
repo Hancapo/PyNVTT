@@ -161,6 +161,17 @@ class NVTT:
             ctypes.c_void_p # NvttTimingContext
         ]
         
+        #Ignore ResizeMaxParams
+        
+        self._lib.nvttSurfaceResizeMakeSquare.restype = None
+        self._lib.nvttSurfaceResizeMakeSquare.argtypes = [
+            self.NvttSurfacePtr,
+            ctypes.c_int,  # maxExtent
+            ctypes.c_int,  # RoundMode
+            ctypes.c_int,  # Filter
+            ctypes.c_void_p # NvttTimingContext
+        ]
+        
         self._lib.nvttSurfaceBuildNextMipmapDefaults.restype = ctypes.c_bool
         self._lib.nvttSurfaceBuildNextMipmapDefaults.argtypes = [
             self.NvttSurfacePtr,
