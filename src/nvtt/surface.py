@@ -1,6 +1,6 @@
 import ctypes
 from pathlib import Path
-from .enums import Filters, WrapMode, AlphaMode, TextureType, Channel, RoundMode, ImageType
+from .enums import Filters, WrapMode, AlphaMode, TextureType, RoundMode
 from nvtt.image_helper import get_bytes_from_image
 from .core import nvtt
 
@@ -36,8 +36,8 @@ class Surface:
     def clone(self) -> "Surface":
         "Creates a deep copy of this Surface, with its own internal data."
         new_ptr = self._lib.nvttSurfaceClone(self._ptr)
-        if not new_ptr:
-            raise RuntimeError("nvttSurfaceClone error")
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
         surf: Surface = Surface()
         surf._ptr = new_ptr
         return surf
@@ -50,8 +50,8 @@ class Surface:
     @wrap_mode.setter
     def wrap_mode(self, value: WrapMode) -> None:
         """Set the Surface's wrap mode."""
-        if not isinstance(value, WrapMode):
-            raise TypeError("value must be WrapMode")
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
         self._lib.nvttSetSurfaceWrapMode(self._ptr, int(value))
 
     @property
@@ -62,13 +62,15 @@ class Surface:
     @alpha_mode.setter
     def alpha_mode(self, value: AlphaMode) -> None:
         """Set the alpha mode of the surface."""
-        if not isinstance(value, AlphaMode):
-            raise TypeError("value must be AlphaMode")
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
         self._lib.nvttSetSurfaceAlphaMode(self._ptr, int(value))
 
     @property
     def normal_map(self) -> bool:
         """Returns whether the image represents a normal map."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
         return bool(self._lib.nvttSurfaceIsNormalMap(self._ptr))
 
     @normal_map.setter
@@ -105,22 +107,17 @@ class Surface:
 
     def count_mipmaps(self, min_size: int = 1) -> int:
         """Returns the number of mipmaps in a mipmap chain."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
         return self._lib.nvttSurfaceCountMipmaps(self._ptr, min_size)
 
     def alpha_test_coverage(self, alpha_ref: float, alpha_channel: int) -> float:
         """Returns the approximate fraction (0 to 1) of the image with an alpha value greater than `alpha_ref`."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
         return self._lib.nvttSurfaceAlphaTestCoverage(
             self._ptr, alpha_ref, alpha_channel
         )
-        
-    def histogram(self, channel: Channel, range_max: float, bin_count: int) -> None:
-        """Fills a histogram with the values of the specified channel."""
-
-        histogram = (ctypes.c_float * bin_count)()
-        self._lib.nvttSurfaceHistogram(
-            self._ptr, int(channel), range_max, bin_count, histogram
-        )
-        return histogram
 
     def load(self, file: str, expect_signed: bool = False) -> bool:
         """Loads texture data from a file."""
@@ -189,8 +186,8 @@ class Surface:
 
     def build_next_mipmap(self, filter: Filters, min_size: int = 1) -> bool:
         """Replaces this surface with a surface the size of the next mip in a mip chain (half the width and height), but with each channel cleared to a constant value."""
-        if not self._ptr:
-            raise RuntimeError("Surface has already been destroyed or not initialized.")
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
         return self._lib.nvttSurfaceBuildNextMipmapDefaults(
             self._ptr, int(filter), min_size, None
         )
@@ -198,6 +195,6 @@ class Surface:
     @property
     def has_alpha(self) -> bool:
         """Returns if the surface has an alpha channel."""
-        if self._has_alpha is None:
-            raise RuntimeError("Surface has not been loaded or has been destroyed.")
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
         return self._has_alpha
