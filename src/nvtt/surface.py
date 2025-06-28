@@ -209,6 +209,26 @@ class Surface:
         if self.is_null:
             raise RuntimeError("Surface is null or has not been initialized.")
         return bool(self._lib.nvttSurfaceCanMakeNextMipmap(self._ptr, min_size))
+    
+    def to_linear(self, gamma: float = 2.2) -> None:
+        """
+        Raises channels 0...2 to the power `gamma`.
+        
+        `gamma = 2.2` approximates sRGB-to-linear conversion..
+        """
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        self._lib.nvttSurfaceToLinear(self._ptr, gamma, None)
+        
+    def to_gamma(self, gamma: float = 2.2) -> None:
+        """
+        Raises channels 0...2 to the power `1/gamma`.
+
+        `gamma = 2.2` approximates linear-to-sRGB conversion.
+        """
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        self._lib.nvttSurfaceToLinear(self._ptr, gamma, None)
 
     @property
     def has_alpha(self) -> bool:

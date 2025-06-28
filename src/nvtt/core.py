@@ -186,6 +186,12 @@ class NVTT:
         
         self._lib.nvttSurfaceCanMakeNextMipmap.restype = ctypes.c_bool
         self._lib.nvttSurfaceCanMakeNextMipmap.argtypes = [self.NvttSurfacePtr, ctypes.c_int]
+        
+        self._lib.nvttSurfaceToLinear.restype = None
+        self._lib.nvttSurfaceToLinear.argtypes = [self.NvttSurfacePtr, ctypes.c_float, ctypes.c_void_p]
+        
+        self._lib.nvttSurfaceToGamma.restype = None
+        self._lib.nvttSurfaceToGamma.argtypes = [self.NvttSurfacePtr, ctypes.c_float, ctypes.c_void_p]
 
     def map_comp_options_funcs(self):
         """Map nvttCompressionOptions functions."""
