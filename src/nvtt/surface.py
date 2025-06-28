@@ -1,6 +1,6 @@
 import ctypes
 from pathlib import Path
-from .enums import Filters, WrapMode, AlphaMode, TextureType, RoundMode
+from .enums import Filters, WrapMode, AlphaMode, TextureType, RoundMode, Channel
 from nvtt.image_helper import get_bytes_from_image
 from .core import nvtt
 
@@ -229,6 +229,28 @@ class Surface:
         if self.is_null:
             raise RuntimeError("Surface is null or has not been initialized.")
         self._lib.nvttSurfaceToLinear(self._ptr, gamma, None)
+        
+    def to_linear_channel(self, channel: Channel, gamma: float = 2.2) -> None:
+        """
+        Raises the given channel to the power `gamma`.
+        """
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        if channel == Channel.ALPHA:
+            print("Warning: Converting the alpha channel to linear is not supported. The alpha channel will be left unchanged.")
+            return 
+        self._lib.nvttSurfaceToLinearChannel(self._ptr, int(channel), gamma, None)
+        
+    def to_gamma_channel(self, channel: Channel, gamma: float = 2.2) -> None:
+        """
+        Raises the given channel to the power `1/gamma`.
+        """
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        if channel == Channel.ALPHA:
+            print("Warning: Converting the alpha channel to gamma is not supported. The alpha channel will be left unchanged.")
+            return 
+        self._lib.nvttSurfaceToGammaChannel(self._ptr, int(channel), gamma, None)
 
     @property
     def has_alpha(self) -> bool:
