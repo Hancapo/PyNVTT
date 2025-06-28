@@ -203,6 +203,12 @@ class Surface:
         if self.is_null:
             raise RuntimeError("Surface is null or has not been initialized.")
         self._lib.nvttSurfaceCanvasSize(self._ptr, width, height, depth, None)
+        
+    def can_make_next_mipmap(self, min_size: int = 1) -> bool:
+        """Returns whether a the surface would have a next mip in a mip chain with minimum size `min_size`."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        return bool(self._lib.nvttSurfaceCanMakeNextMipmap(self._ptr, min_size))
 
     @property
     def has_alpha(self) -> bool:

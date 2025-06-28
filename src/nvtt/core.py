@@ -183,6 +183,9 @@ class NVTT:
         #Ignore BuildNextMipmapSolidColor
         self._lib.nvttSurfaceCanvasSize.restype = None
         self._lib.nvttSurfaceCanvasSize.argtypes = [self.NvttSurfacePtr, ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_void_p]
+        
+        self._lib.nvttSurfaceCanMakeNextMipmap.restype = ctypes.c_bool
+        self._lib.nvttSurfaceCanMakeNextMipmap.argtypes = [self.NvttSurfacePtr, ctypes.c_int]
 
     def map_comp_options_funcs(self):
         """Map nvttCompressionOptions functions."""

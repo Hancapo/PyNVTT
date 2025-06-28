@@ -52,14 +52,12 @@ class Context:
         mipmap_count: int = surface.count_mipmaps(min_level) if do_mips else 1
         self.output_header(surface, mipmap_count, co, oo)
         self.compress(surface, face, 0, co, oo)
-        
-        for level in range(1, mipmap_count):
-            mipmap_has_built: bool = surface.build_next_mipmap(int(mipmap_filter), min_level)
-            if not mipmap_has_built:
-                raise RuntimeError(f"Failed to build mipmap level {level} for surface {surface._ptr}.")
-            
-            has_compressed: bool = self.compress(surface, face, level, co, oo)
-            if not has_compressed:
+        mip: int = 1
+        while surface.can_make_next_mipmap(min_level):
+            if not surface.build_next_mipmap(int(mipmap_filter), min_level):
+                raise RuntimeError(f"Failed to build a mipmap level for surface {surface._ptr}.")
+            mip += 1
+            if not self.compress(surface, face, mip, co, oo):
                 raise RuntimeError(f"Failed to compress the {surface._ptr} surface.")
         
     def estimate_size(self, surface: Surface, mipmap_count: int, co: CompressionOptions):
