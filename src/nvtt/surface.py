@@ -212,7 +212,7 @@ class Surface:
     
     def to_linear(self, gamma: float = 2.2) -> None:
         """
-        Raises channels 0...2 to the power `gamma`.
+        Raises RGB channels to the power `gamma`.
         
         `gamma = 2.2` approximates sRGB-to-linear conversion..
         """
@@ -222,7 +222,7 @@ class Surface:
         
     def to_gamma(self, gamma: float = 2.2) -> None:
         """
-        Raises channels 0...2 to the power `1/gamma`.
+        Raises RGB channels to the power `1/gamma`.
 
         `gamma = 2.2` approximates linear-to-sRGB conversion.
         """
@@ -251,6 +251,42 @@ class Surface:
             print("Warning: Converting the alpha channel to gamma is not supported. The alpha channel will be left unchanged.")
             return 
         self._lib.nvttSurfaceToGammaChannel(self._ptr, int(channel), gamma, None)
+        
+    def to_srgb(self) -> None:
+        """Applies the linear-to-sRGB transfer function to RGB channels."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        self._lib.nvttSurfaceToSrgb(self._ptr, None)
+        
+    def to_srgb_unclamped(self) -> None:
+        """Applies the linear-to-sRGB transfer function to RGB channels, but does not clamp output to [0,1]."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        self._lib.nvttSurfaceToSrgbUnclamped(self._ptr, None)
+        
+    def to_linear_from_srgb(self) -> None:
+        """Applies the sRGB-to-linear transfer function to RGB channels."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        self._lib.nvttSurfaceToLinearFromSrgb(self._ptr, None)
+    
+    def to_linear_from_srgb_unclamped(self) -> None:
+        """Applies the sRGB-to-linear transfer function to RGB channels, but does not clamp output to [0,1]."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        self._lib.nvttSurfaceToLinearFromSrgbUnclamped(self._ptr, None)
+        
+    def to_xenon_srgb(self) -> None:
+        """Converts colors in RGB channels from linear to a piecewise linear sRGB approximation."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        self._lib.nvttSurfaceToXenonSrgb(self._ptr, None)
+        
+    def to_linear_from_xenon_srgb(self) -> None:
+        """Converts colors in RGB channels from the Xenon sRGB piecewise linear sRGB approximation to linear."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        self._lib.nvttSurfaceToLinearFromXenonSrgb(self._ptr, None)
 
     @property
     def has_alpha(self) -> bool:

@@ -198,6 +198,24 @@ class NVTT:
         
         self._lib.nvttSurfaceToGammaChannel.restype = None
         self._lib.nvttSurfaceToGammaChannel.argtypes = [self.NvttSurfacePtr, ctypes.c_int, ctypes.c_float, ctypes.c_void_p]
+        
+        self._lib.nvttSurfaceToSrgb.restype = None
+        self._lib.nvttSurfaceToSrgb.argtypes = [self.NvttSurfacePtr, ctypes.c_void_p]
+        
+        self._lib.nvttSurfaceToSrgbUnclamped.restype = None
+        self._lib.nvttSurfaceToSrgbUnclamped.argtypes = [self.NvttSurfacePtr, ctypes.c_void_p]
+        
+        self._lib.nvttSurfaceToLinearFromSrgb.restype = None
+        self._lib.nvttSurfaceToLinearFromSrgb.argtypes = [self.NvttSurfacePtr, ctypes.c_void_p]
+        
+        self._lib.nvttSurfaceToLinearFromSrgbUnclamped.restype = None
+        self._lib.nvttSurfaceToLinearFromSrgbUnclamped.argtypes = [self.NvttSurfacePtr, ctypes.c_void_p]
+        
+        self._lib.nvttSurfaceToXenonSrgb.restype = None
+        self._lib.nvttSurfaceToXenonSrgb.argtypes = [self.NvttSurfacePtr, ctypes.c_void_p]
+        
+        self._lib.nvttSurfaceToLinearFromXenonSrgb.restype = None
+        self._lib.nvttSurfaceToLinearFromXenonSrgb.argtypes = [self.NvttSurfacePtr, ctypes.c_void_p]
 
     def map_comp_options_funcs(self):
         """Map nvttCompressionOptions functions."""
