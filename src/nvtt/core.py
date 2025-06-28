@@ -172,13 +172,17 @@ class NVTT:
             ctypes.c_void_p # NvttTimingContext
         ]
         
+        #Ignore BuildNextMipmap
+        
         self._lib.nvttSurfaceBuildNextMipmapDefaults.restype = ctypes.c_bool
         self._lib.nvttSurfaceBuildNextMipmapDefaults.argtypes = [
             self.NvttSurfacePtr,
             ctypes.c_int,
         ]
         
-        
+        #Ignore BuildNextMipmapSolidColor
+        self._lib.nvttSurfaceCanvasSize.restype = None
+        self._lib.nvttSurfaceCanvasSize.argtypes = [self.NvttSurfacePtr, ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_void_p]
 
     def map_comp_options_funcs(self):
         """Map nvttCompressionOptions functions."""

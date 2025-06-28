@@ -197,6 +197,12 @@ class Surface:
         return self._lib.nvttSurfaceBuildNextMipmapDefaults(
             self._ptr, int(filter), min_size, None
         )
+        
+    def canvas_size(self, width: int, height: int, depth: int = 1) -> None:
+        """Crops or expands this surface from the (0,0,0) corner, with any new values cleared to 0."""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        self._lib.nvttSurfaceCanvasSize(self._ptr, width, height, depth, None)
 
     @property
     def has_alpha(self) -> bool:
