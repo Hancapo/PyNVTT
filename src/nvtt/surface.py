@@ -1,8 +1,9 @@
 import ctypes
 from pathlib import Path
 from .enums import Filters, WrapMode, AlphaMode, TextureType, RoundMode, Channel
-from nvtt.image_helper import get_bytes_from_image
+from nvtt.utils.image_helper import get_bytes_from_image
 from .core import nvtt
+from nvtt.utils.transforms4 import Transform4
 
 
 class Surface:
@@ -287,6 +288,15 @@ class Surface:
         if self.is_null:
             raise RuntimeError("Surface is null or has not been initialized.")
         self._lib.nvttSurfaceToLinearFromXenonSrgb(self._ptr, None)
+        
+    def transform(self, transform: Transform4) -> None:
+        """Applies a 4x4 affine transformation to the values in RGBA channels"""
+        if self.is_null:
+            raise RuntimeError("Surface is null or has not been initialized.")
+        w0, w1, w2, w3, offset = transform.get_rows()
+        self._lib.nvttSurfaceTransform(
+            self._ptr, w0, w1, w2, w3, offset, None
+        )
 
     @property
     def has_alpha(self) -> bool:

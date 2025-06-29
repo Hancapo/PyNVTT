@@ -1,8 +1,8 @@
-from .surface import Surface
-from .compression import CompressionOptions
-from .output import OutputOptions
-from .enums import Format, Quality
-from .context import Context
+from ..surface import Surface
+from ..compression import CompressionOptions
+from ..output import OutputOptions
+from ..enums import Format, Quality
+from ..context import Context
 from pathlib import Path
 
 class EasyDDS:
