@@ -9,3 +9,6 @@ main.py
 /examples
 /dist
 /images
+.github/workflows/publish.yml
+deploy.py
+pyproject.toml
