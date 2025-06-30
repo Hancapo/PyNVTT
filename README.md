@@ -16,46 +16,55 @@ pip install pynvtt
 ```
 ---
 
-## Usage
+## Examples
 
-Convert a PNG to DDS
+Minimal PNG to DDS conversion.
 
 ```python
 from nvtt.surface import Surface
 from nvtt.compression import CompressionOptions
 from nvtt.output import OutputOptions
 from nvtt.context import Context
-from nvtt.enums import Format, Quality
-from pathlib import Path
 
-img_name = "texture_01.png"
-parent = Path(__file__).resolve().parent
-img = str(Path.joinpath(parent, img_name).resolve())
-
-img_surface = Surface(img)
-
+surface = Surface("texture_01.png")
 compression = CompressionOptions()
-compression.format(Format.DXT1)
-compression.quality(Quality.Normal)
-
 output = OutputOptions()
-output.filename(img.split('.')[0] + ".dds")
-
-context = Context()
-context.compress_all(img_surface, compression, output)
+output.filename("texture_01.dds")
+ctx = Context()
+ctx.compress_all(surface, compression, output)
 ```
 
 You can also use the `EasyDDS` class for your convenience.
 
 ```python
 from nvtt.easy_dds import EasyDDS
-from pathlib import Path
 
-img_name = "texture_01.png"
-parent = Path(__file__).resolve().parent
-img = Path.joinpath(parent, img_name).resolve()
+EasyDDS.convert_img("texture_01.png")
+```
+This will create a DXT1 DDS with default mipmap generation.
 
-EasyDDS.convert_img(img)
+---
+
+Converting a Pillow image.
+
+```python
+from nvtt.surface import Surface
+from nvtt.compression import CompressionOptions
+from nvtt.output import OutputOptions
+from nvtt.context import Context
+from nvtt.enums import Format
+from PIL import Image
+
+img_surface = Surface(Image.open("texture_01.png"))
+
+compression = CompressionOptions()
+compression.format(Format.DXT1)
+
+output = OutputOptions()
+output.filename("texture_01.dds")
+
+ctx = Context()
+ctx.compress_all(img_surface, compression, output)
 ```
 This will create a DXT1 DDS with default mipmap generation.
 
