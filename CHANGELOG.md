@@ -12,12 +12,15 @@ PyNVTT changes.
 - Added resize methods including resize to power-of-two methods, max extents, etc.
 - Linux support.
 - Added Pillow's `Image` support in Surface constructor.
+- Added Canvas resizing.
+- Added Surface saving.
 
 ### Changes
 - CUDA acceleration is now disabled by default when using an `EasyDDS` object.
 - The `convert_all` method now uses the `can_make_next_mipmap` method.
 - Replaced almost all docstrings with their NVTT's headers counterparts.
 - Surface's `is_null` method used are now used in most methods instead of doing a pointer check.
+- Minor changes to some enums.
 
 ## [0.0.1] - Initial Release
 
