@@ -41,7 +41,7 @@ from nvtt.easy_dds import EasyDDS
 
 EasyDDS.convert_img("texture_01.png")
 ```
-This will create a DXT1 DDS with default mipmap generation.
+This will create a DXT1 DDS with default mipmap generation with the same name in the same path.
 
 ---
 
